@@ -6,6 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "study_program", schema = "university_system_db", catalog = "")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class StudyProgram {
     private Integer id;
     private String name;
@@ -16,6 +17,7 @@ public class StudyProgram {
     private Integer collegeId;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -56,7 +58,7 @@ public class StudyProgram {
     }
 
     @Basic
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -66,7 +68,7 @@ public class StudyProgram {
     }
 
     @Basic
-    @Column(name = "active", nullable = false)
+    @Column(name = "active", nullable = false, insertable = false, updatable = false)
     public Byte getActive() {
         return active;
     }

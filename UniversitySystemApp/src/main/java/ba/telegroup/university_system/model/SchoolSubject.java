@@ -6,6 +6,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "school_subject", schema = "university_system_db", catalog = "")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class SchoolSubject {
     private Integer id;
     private String name;
@@ -15,6 +16,7 @@ public class SchoolSubject {
     private Integer ects;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;

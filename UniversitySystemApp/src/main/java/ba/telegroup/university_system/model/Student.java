@@ -1,14 +1,13 @@
 package ba.telegroup.university_system.model;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
+@Table(name = "student")
 public class Student {
     private Integer id;
     private String firstName;
@@ -22,6 +21,7 @@ public class Student {
     private String numRegistration;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
@@ -72,7 +72,7 @@ public class Student {
     }
 
     @Basic
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -82,7 +82,7 @@ public class Student {
     }
 
     @Basic
-    @Column(name = "active", nullable = false)
+    @Column(name = "active", nullable = false, insertable = false, updatable = false)
     public Byte getActive() {
         return active;
     }

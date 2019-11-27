@@ -4,6 +4,7 @@ import javax.persistence.*;
 import java.util.Objects;
 
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "teacher_school_subject", schema = "university_system_db", catalog = "")
 public class TeacherSchoolSubject {
     private Integer id;
@@ -11,6 +12,7 @@ public class TeacherSchoolSubject {
     private Integer schoolSubjectId;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     public Integer getId() {
         return id;
