@@ -18,7 +18,7 @@ var scriptsToLoad = [
         "section": "views",
         "path": "js/views/",
 
-        "files": []
+        "files": ["login", "main", "university"]
     },
     {
         "section": "core",

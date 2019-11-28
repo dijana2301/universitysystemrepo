@@ -37,7 +37,7 @@ public class SchoolSubject {
     }
 
     @Basic
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, insertable = false, updatable = false)
     public Timestamp getCreatedAt() {
         return createdAt;
     }
@@ -47,7 +47,7 @@ public class SchoolSubject {
     }
 
     @Basic
-    @Column(name = "active", nullable = false)
+    @Column(name = "active", nullable = false, insertable = false, updatable = false)
     public Byte getActive() {
         return active;
     }
