@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface TitleRepository extends JpaRepository<Title, Integer> {
-    List<Title> findAll();
 
+    List<Title> findAll();
     Title getById(Integer id);
 }

@@ -2,6 +2,7 @@ package ba.telegroup.university_system.controller;
 
 
 import ba.telegroup.university_system.model.Teacher;
+import ba.telegroup.university_system.model.modelCustom.TeacherTitle;
 import ba.telegroup.university_system.repository.TeacherRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -14,7 +15,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @RestController
-@RequestMapping("/teacher")
+@RequestMapping("hub/teacher")
 @Scope("request")
 public class TeacherController {
 
@@ -30,13 +31,24 @@ public class TeacherController {
 
     @GetMapping(value = "/")
     public List<Teacher> getAll() {
-        return teacherRepository.findAll();
+        return teacherRepository.getAllByActive((byte) 1);
     }
 
     @GetMapping(value = "/{id}")
     public Teacher getById(@PathVariable Integer id) {
         return teacherRepository.getById(id);
     }
+
+    @GetMapping(value = "/custom/")
+    public List<TeacherTitle> getAllCustom() {
+        return teacherRepository.getAllCustom();
+    }
+
+    @GetMapping(value = "/custom/{id}")
+    public TeacherTitle getByIdCustom(@PathVariable Integer id) {
+        return teacherRepository.getByIdCustom(id);
+    }
+
 
     @Transactional
     @PostMapping(value = "/")

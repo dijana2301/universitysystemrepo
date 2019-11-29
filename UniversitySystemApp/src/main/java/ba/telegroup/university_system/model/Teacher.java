@@ -19,6 +19,22 @@ public class Teacher {
     private Integer titleId;
     private Integer universityId;
 
+
+    public Teacher() {
+    }
+
+    public Teacher(Integer id, String firstName, String lastName, java.util.Date dateOfBirth, String address, Timestamp createdAt, Byte active, Integer titleId, Integer universityId) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = new Date(dateOfBirth.getTime());
+        this.address = address;
+        this.createdAt = createdAt;
+        this.active = active;
+        this.titleId = titleId;
+        this.universityId = universityId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

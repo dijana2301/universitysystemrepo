@@ -11,6 +11,15 @@ public class TeacherSchoolSubject {
     private Integer teacherId;
     private Integer schoolSubjectId;
 
+    public TeacherSchoolSubject() {
+    }
+
+    public TeacherSchoolSubject(Integer id, Integer teacherId, Integer schoolSubjectId) {
+        this.id = id;
+        this.teacherId = teacherId;
+        this.schoolSubjectId = schoolSubjectId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

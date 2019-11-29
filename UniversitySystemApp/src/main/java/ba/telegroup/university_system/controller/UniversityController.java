@@ -2,6 +2,7 @@ package ba.telegroup.university_system.controller;
 
 import ba.telegroup.university_system.model.University;
 import ba.telegroup.university_system.repository.UniversityRepository;
+import ba.telegroup.university_system.util.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -10,10 +11,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/university")
+@RequestMapping("hub/university")
 @Scope("request")
 public class UniversityController {
     private final UniversityRepository universityRepository;
@@ -65,6 +67,17 @@ public class UniversityController {
         } catch (Exception ex) {
             return "Fail";
         }
+    }
+
+    @GetMapping(value = "/values")
+    public List<Value> getAllValues() {
+        List<University> universityList = universityRepository.findAll();
+        List<Value> result = new ArrayList<>();
+        for (University university : universityList) {
+            result.add(new Value(university.getId(), university.getName()));
+        }
+
+        return result;
     }
 
 }

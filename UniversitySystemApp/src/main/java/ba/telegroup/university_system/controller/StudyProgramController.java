@@ -1,7 +1,9 @@
 package ba.telegroup.university_system.controller;
 
 import ba.telegroup.university_system.model.StudyProgram;
+import ba.telegroup.university_system.model.modelCustom.StudyProgramCollege;
 import ba.telegroup.university_system.repository.StudyProgramRepository;
+import ba.telegroup.university_system.util.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/studyProgram")
+@RequestMapping("hub/studyProgram")
 @Scope("request")
 public class StudyProgramController {
 
@@ -37,6 +40,15 @@ public class StudyProgramController {
         return studyProgramRepository.getById(id);
     }
 
+    @GetMapping(value = "/custom/")
+    public List<StudyProgramCollege> getAllCustom() {
+        return studyProgramRepository.getAllCustom();
+    }
+
+    @GetMapping(value = "/custom/{id}")
+    public StudyProgramCollege getByIdCustom(@PathVariable Integer id) {
+        return studyProgramRepository.getByIdCustom(id);
+    }
 
     @Transactional
     @PostMapping(value = "/")
@@ -70,6 +82,17 @@ public class StudyProgramController {
         } else
             return "Fail";
 
+    }
+
+    @GetMapping(value = "/values")
+    public List<Value> getAllValues() {
+        List<StudyProgram> collegeList = studyProgramRepository.findAll();
+        List<Value> result = new ArrayList<>();
+        for (StudyProgram college : collegeList) {
+            result.add(new Value(college.getId(), college.getName()));
+        }
+
+        return result;
     }
 
 }

@@ -15,6 +15,18 @@ public class SchoolSubject {
     private Integer studyProgramId;
     private Integer ects;
 
+    public SchoolSubject() {
+    }
+
+    public SchoolSubject(Integer id, String name, Timestamp createdAt, Byte active, Integer studyProgramId, Integer ects) {
+        this.id = id;
+        this.name = name;
+        this.createdAt = createdAt;
+        this.active = active;
+        this.studyProgramId = studyProgramId;
+        this.ects = ects;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

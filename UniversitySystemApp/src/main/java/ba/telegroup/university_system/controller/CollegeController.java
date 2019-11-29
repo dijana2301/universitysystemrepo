@@ -1,7 +1,9 @@
 package ba.telegroup.university_system.controller;
 
 import ba.telegroup.university_system.model.College;
+import ba.telegroup.university_system.model.modelCustom.CollegeUniversity;
 import ba.telegroup.university_system.repository.CollegeRepository;
+import ba.telegroup.university_system.util.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/college")
+@RequestMapping("hub/college")
 @Scope("request")
 public class CollegeController {
 
@@ -37,24 +40,34 @@ public class CollegeController {
         return collegeRepository.getById(id);
     }
 
+    @GetMapping(value = "/custom/")
+    public List<CollegeUniversity> getAllCustom() {
+        return collegeRepository.getAllCustom();
+    }
+
+    @GetMapping(value = "/custom/{id}")
+    public CollegeUniversity getByIdCustom(@PathVariable Integer id) {
+        return collegeRepository.getByIdCustom(id);
+    }
+
     @Transactional
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public College insert(@RequestBody College college) {
+    public CollegeUniversity insert(@RequestBody College college) {
         College insertedCollege = collegeRepository.saveAndFlush(college);
         entityManager.refresh(insertedCollege);
         System.out.println(insertedCollege.getId());
-        return insertedCollege;
+        return getByIdCustom(insertedCollege.getId());
     }
 
     @Transactional
     @PutMapping(value = "/")
-    public College update(@RequestBody College college) {
+    public CollegeUniversity update(@RequestBody College college) {
         if (collegeRepository.getById(college.getId()) != null) {
             college.setActive((byte) 1);
             College updatedCollege = collegeRepository.saveAndFlush(college);
             entityManager.refresh(updatedCollege);
-            return updatedCollege;
+            return getByIdCustom(updatedCollege.getId());
         }
         return null;
     }
@@ -69,5 +82,16 @@ public class CollegeController {
         } else
             return "Fail";
 
+    }
+
+    @GetMapping(value = "/values")
+    public List<Value> getAllValues() {
+        List<College> collegeList = collegeRepository.findAll();
+        List<Value> result = new ArrayList<>();
+        for (College college : collegeList) {
+            result.add(new Value(college.getId(), college.getName()));
+        }
+
+        return result;
     }
 }

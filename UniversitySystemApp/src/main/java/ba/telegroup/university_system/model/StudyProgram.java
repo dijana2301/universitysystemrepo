@@ -16,6 +16,19 @@ public class StudyProgram {
     private Byte active;
     private Integer collegeId;
 
+    public StudyProgram() {
+    }
+
+    public StudyProgram(Integer id, String name, Integer numOfYears, Integer ects, Timestamp createdAt, Byte active, Integer collegeId) {
+        this.id = id;
+        this.name = name;
+        this.numOfYears = numOfYears;
+        this.ects = ects;
+        this.createdAt = createdAt;
+        this.active = active;
+        this.collegeId = collegeId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

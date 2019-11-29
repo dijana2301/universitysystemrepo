@@ -8,6 +8,8 @@ import java.util.Objects;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "college")
+
+
 public class College {
     private Integer id;
     private String name;
@@ -16,6 +18,20 @@ public class College {
     private Timestamp createdAt;
     private Byte active;
     private Integer universityId;
+
+
+    public College() {
+    }
+
+    public College(Integer id, String name, String address, java.util.Date dateOfFoundation, Timestamp createdAt, Byte active, Integer universityId) {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.dateOfFoundation = new Date(dateOfFoundation.getTime());
+        this.createdAt = createdAt;
+        this.active = active;
+        this.universityId = universityId;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

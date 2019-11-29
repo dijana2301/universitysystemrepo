@@ -275,7 +275,7 @@ var universityView = {
                 address: form.getValues().address,
                 dateOfFoundation: new Date(form.getValues().dateOfFoundation)
             };
-            connection.sendAjax("POST", "university/",
+            connection.sendAjax("POST", "hub/university/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('universityTable').add(jsonData);
@@ -426,7 +426,7 @@ var universityView = {
 
             };
 
-            connection.sendAjax("PUT", "university/",
+            connection.sendAjax("PUT", "hub/university/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('universityTable').updateItem(newUniversity.id, jsonData);

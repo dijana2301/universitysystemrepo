@@ -20,6 +20,22 @@ public class Student {
     private Integer universityId;
     private String numRegistration;
 
+    public Student() {
+    }
+
+    public Student(Integer id, String firstName, String lastName, java.util.Date dateOfBirth, String address, Timestamp createdAt, Byte active, Integer studyProgramId, Integer universityId, String numRegistration) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dateOfBirth = new Date(dateOfBirth.getTime());
+        this.address = address;
+        this.createdAt = createdAt;
+        this.active = active;
+        this.studyProgramId = studyProgramId;
+        this.universityId = universityId;
+        this.numRegistration = numRegistration;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

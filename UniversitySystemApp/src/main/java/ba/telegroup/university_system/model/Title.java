@@ -10,6 +10,14 @@ public class Title {
     private Integer id;
     private String name;
 
+    public Title() {
+    }
+
+    public Title(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

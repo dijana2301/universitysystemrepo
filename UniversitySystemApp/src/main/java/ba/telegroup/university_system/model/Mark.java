@@ -13,6 +13,17 @@ public class Mark {
     private Integer schoolSubjectId;
     private Integer teacherId;
 
+    public Mark() {
+    }
+
+    public Mark(Integer id, Integer value, Integer studentId, Integer schoolSubjectId, Integer teacherId) {
+        this.id = id;
+        this.value = value;
+        this.studentId = studentId;
+        this.schoolSubjectId = schoolSubjectId;
+        this.teacherId = teacherId;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)

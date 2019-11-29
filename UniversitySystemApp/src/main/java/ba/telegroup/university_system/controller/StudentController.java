@@ -1,7 +1,9 @@
 package ba.telegroup.university_system.controller;
 
 import ba.telegroup.university_system.model.Student;
+import ba.telegroup.university_system.model.modelCustom.StudentStudyProgram;
 import ba.telegroup.university_system.repository.StudentRepository;
+import ba.telegroup.university_system.util.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -10,10 +12,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("student")
+@RequestMapping("hub/student")
 @Scope("request")
 public class StudentController {
 
@@ -29,12 +32,22 @@ public class StudentController {
 
     @GetMapping(value = "/")
     public List<Student> getAll() {
-        return studentRepository.findAll();
+        return studentRepository.getAllByActive((byte) 1);
     }
 
     @GetMapping(value = "/{id}")
     public Student getById(@PathVariable Integer id) {
         return studentRepository.getById(id);
+    }
+
+    @GetMapping(value = "/custom/")
+    public List<StudentStudyProgram> getAllCustom() {
+        return studentRepository.getAllCustom();
+    }
+
+    @GetMapping(value = "/custom/{id}")
+    public StudentStudyProgram getByIdCustom(@PathVariable Integer id) {
+        return studentRepository.getByIdCustom(id);
     }
 
     @Transactional
@@ -69,4 +82,17 @@ public class StudentController {
             return "Fail";
     }
 
+
+    @GetMapping(value = "/values")
+
+    public List<Value> getAllValues() {
+        List<Student> studentList = studentRepository.findAll();
+        List<Value> result = new ArrayList<>();
+        for (Student student : studentList) {
+            result.add(new Value(student.getId(), student.getFirstName() + " " + student.getLastName()));
+        }
+
+        return result;
+    }
 }
+

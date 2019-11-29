@@ -2,6 +2,7 @@ package ba.telegroup.university_system.controller;
 
 
 import ba.telegroup.university_system.model.Mark;
+import ba.telegroup.university_system.model.modelCustom.MarkStudentSchoolSubjectTeacher;
 import ba.telegroup.university_system.repository.MarkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
@@ -14,7 +15,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @RestController
-@RequestMapping("mark")
+@RequestMapping("hub/mark")
 @Scope("request")
 public class MarkController {
 
@@ -33,6 +34,15 @@ public class MarkController {
         return markRepository.findAll();
     }
 
+    @GetMapping(value = "/custom/")
+    public List<MarkStudentSchoolSubjectTeacher> getAllCustom() {
+        return markRepository.getAllCustom();
+    }
+
+    @GetMapping(value = "/custom/{id}")
+    public MarkStudentSchoolSubjectTeacher getByIdCustom(@PathVariable Integer id) {
+        return markRepository.getByIdCustom(id);
+    }
 
     @Transactional
     @PostMapping(value = "/")

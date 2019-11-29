@@ -1,17 +1,18 @@
 package ba.telegroup.university_system.controller;
 
+import ba.telegroup.university_system.model.User;
 import ba.telegroup.university_system.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 @RestController
 @RequestMapping("hub/user")
@@ -27,6 +28,49 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
+    @GetMapping(value = "/")
+    public List<User> getAll() {
+        return userRepository.getAllByActive((byte) 1);
+    }
+
+    @GetMapping(value = "/{id}")
+    public User getById(@PathVariable Integer id) {
+        return userRepository.getById(id);
+    }
+
+    @Transactional
+    @PostMapping(value = "/")
+    @ResponseStatus(HttpStatus.CREATED)
+    public User insert(@RequestBody User university) {
+        User insertedUser = userRepository.saveAndFlush(university);
+        entityManager.refresh(insertedUser);
+        System.out.println(insertedUser.getId());
+        return insertedUser;
+    }
+
+    @Transactional
+    @PutMapping(value = "/")
+    public User update(@RequestBody User user) {
+        if (userRepository.getById(user.getId()) != null) {
+            User updatedUser = userRepository.saveAndFlush(user);
+            entityManager.refresh(updatedUser);
+            return updatedUser;
+        }
+        return null;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public String delete(@PathVariable Integer id) {
+        try {
+            userRepository.deleteById(id);
+            return "Success";
+        } catch (Exception ex) {
+            return "Fail";
+        }
+    }
+
+
+
     @SuppressWarnings("SameReturnValue")
     @GetMapping(value = "/logout")
     public @ResponseBody
@@ -38,5 +82,6 @@ public class UserController {
 
         return "Success";
     }
+
 
 }

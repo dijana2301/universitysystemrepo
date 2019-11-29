@@ -12,6 +12,27 @@ var menuActions = function (id) {
         case "university":
             universityView.selectPanel();
             break;
+        case "college":
+            collegeView.selectPanel();
+            break;
+        case "studyProgram":
+            studyProgramView.selectPanel();
+            break;
+        case "schoolSubject":
+            schoolSubjectView.selectPanel();
+            break;
+        case "teacher":
+            teacherView.selectPanel();
+            break;
+        case "student":
+            studentView.selectPanel();
+            break;
+        case "teacher_school_subject":
+            teacherSchoolSubjectView.selectPanel();
+            break;
+        case "mark":
+            markView.selectPanel();
+            break;
     }
 };
 
@@ -20,6 +41,41 @@ var menuAdmin = [
         id: "university",
         value: "Univerziteti",
         icon: "university"
+    },
+    {
+        id: "college",
+        value: "Fakulteti",
+        icon: "graduation-cap"
+    },
+    {
+        id: "studyProgram",
+        value: "Studijski programi",
+        icon: "list-alt "
+    },
+    {
+        id: "schoolSubject",
+        value: "Školski predmeti",
+        icon: "fa fa-book"
+    },
+    {
+        id: "teacher",
+        value: "Akademsko osoblje",
+        icon: "chalkboard-teacher"
+    },
+    {
+        id: "student",
+        value: "Studenti",
+        icon: "user-friends"
+    },
+    {
+        id: "teacher_school_subject",
+        value: "Spisak školskih predmeta i njihovih predavača",
+        icon: "book-reader"
+    },
+    {
+        id: "mark",
+        value: "Ocjene",
+        icon: "fa-check"
     }
 ];
 

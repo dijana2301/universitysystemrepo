@@ -13,7 +13,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @RestController
-@RequestMapping("/title")
+@RequestMapping("hub/title")
 @Scope("request")
 public class TitleController {
 
