@@ -11,4 +11,6 @@ public interface UserRepository extends JpaRepository<User, Integer>, UserReposi
     List<User> findAll();
     List<User> getAllByActive(Byte active);
     User getById(Integer id);
+
+    User getByIdAndPassword(Integer id, String password);
 }

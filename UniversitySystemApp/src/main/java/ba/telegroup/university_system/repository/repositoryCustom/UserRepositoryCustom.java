@@ -5,4 +5,6 @@ import ba.telegroup.university_system.util.UserInformation;
 
 public interface UserRepositoryCustom {
     User login(UserInformation userInformation);
+
+    Integer changePassword(User user);
 }

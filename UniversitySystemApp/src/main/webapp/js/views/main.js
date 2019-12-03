@@ -58,6 +58,11 @@ var mainLayout = {
                                     config: {width: 250},
                                     submenu: [
                                         {
+                                            value: "Promjenite lozinku",
+                                            icon: "sign-out",
+                                            width: 400
+                                        },
+                                        {
                                             value: "Odjavite se",
                                             icon: "sign-out",
                                             width: 400
@@ -71,6 +76,9 @@ var mainLayout = {
                                     switch (this.getMenuItem(id).value) {
                                         case "Odjavite se":
                                             logout();
+                                            break;
+                                        case "Promjenite lozinku":
+                                            userView.showChangePasswordDialog();
                                             break;
                                     }
                                 }

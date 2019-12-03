@@ -452,6 +452,122 @@ var userView = {
 
             util.dismissDialog('changeUserDialog');
         }
-    }
+    },
 
+    showChangePasswordDialog: function () {
+        setTimeout(function () {
+            webix.ui(webix.copy(userView.changePasswordDialog)).show();
+            webix.UIManager.setFocus("currentPassword");
+        }, 0);
+    },
+
+    changePasswordDialog: {
+        view: "popup",
+        id: "changePasswordDialogId",
+        modal: true,
+        position: "center",
+        body: {
+            id: "changePasswordDialogInside",
+            rows: [{
+                view: "toolbar",
+                cols: [{
+                    view: "label",
+                    label: "<span class='webix_icon fa-lock'></span> Promjenite lozinku",
+                    width: 400
+                }, {}, {
+                    view: "icon",
+                    icon: "close",
+                    align: "right",
+                    click: "util.dismissDialog('changePasswordDialogId');"
+                }]
+            }, {
+                view: "form",
+                id: "changePasswordForm",
+                width: 500,
+                elementsConfig: {
+                    labelWidth: 200,
+                    bottomPadding: 18
+                },
+                elements: [{
+                    view: "text",
+                    id: "currentPassword",
+                    name: "currentPassword",
+                    type: "password",
+                    required: true,
+                    attributes: {maxLength: 45},
+                    label: "Trenutna lozinka",
+                    invalidMessage: "Unesite trenutnu lozinku"
+                }, {
+                    view: "checkbox",
+                    name: "validOldPassword",
+                    hidden: true,
+                    value: 1
+                }, {
+                    view: "text",
+                    name: "password",
+                    type: "password",
+                    required: true,
+                    attributes: {maxLength: 45},
+                    label: "Nova lozinka",
+                    invalidMessage: "Maksimalna duzina lozinke je 45"
+                }, {
+                    view: "text",
+                    name: "passwordRepeat",
+                    type: "password",
+                    required: true,
+                    attributes: {maxLength: 45},
+                    label: "Ponovljena nova lozinka",
+                    invalidMessage: "Potrebno je ponoviti novu lozinku"
+                }, {
+                    margin: 5,
+                    cols: [{}, {
+                        id: "changedPasswordBtn",
+                        view: "button",
+                        value: "Sacuvaj",
+                        type: "form",
+                        click: "userView.changePasswordDialogAction",
+                        hotkey: "enter",
+                        width: 150
+                    }]
+                }]
+            }]
+        }
+    },
+
+    changePasswordDialogAction: function () {
+        var changePasswordForm = $$("changePasswordForm");
+        if (changePasswordForm.validate()) {
+            if (changePasswordForm.getValues().currentPassword !== changePasswordForm.getValues().password) {
+
+
+                var newItem = {
+                    id: userData.id,
+                    password: changePasswordForm.getValues().password,
+                    currentPassword: changePasswordForm.getValues().currentPassword
+                };
+
+                connection.sendAjax("PUT", "/hub/user/changePassword",
+                    function (text, data, xhr) {
+                        var dataJson = data.json();
+                        if (dataJson.statusCode === StatusCode.OK) {
+                            util.messages.showMessage("passwordChangedSuccess");
+                        } else if (dataJson.statusCode === StatusCode.CONFLICT) {
+                            util.messages.showErrorMessage("passwordMustDifferFromOld")
+                        } else if (dataJson.statusCode === StatusCode.PRECONDITION_FAILED) {
+                            util.messages.showErrorMessage("currentPasswordWrong")
+                        } else {
+                            util.messages.showErrorMessage("errorPasswordChange");
+                        }
+                    },
+                    function () {
+                        util.messages.showErrorMessage("errorPasswordChange");
+                    },
+                    newItem);
+
+                util.dismissDialog('changePasswordDialogId');
+                util.preloader.dec();
+            } else
+                util.messages.showErrorMessage("passwordMustDifferFromOld")
+        }
+    }
 };
