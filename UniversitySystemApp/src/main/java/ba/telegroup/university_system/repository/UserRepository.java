@@ -9,7 +9,6 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<User, Integer>, UserRepositoryCustom {
 
     List<User> findAll();
-
     List<User> getAllByActive(Byte active);
     User getById(Integer id);
 }

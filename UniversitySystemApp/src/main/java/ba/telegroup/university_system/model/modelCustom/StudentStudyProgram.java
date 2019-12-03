@@ -33,16 +33,14 @@ import java.util.Objects;
 
 @MappedSuperclass
 public class StudentStudyProgram extends Student {
-
-
     private String studyProgramName;
     private String universityName;
 
     public StudentStudyProgram() {
     }
 
-    public StudentStudyProgram(Integer id, String firstName, String lastName, java.sql.Date dateOfBirth, String address, Timestamp createdAt, Byte active, Integer studyProgramId, Integer universityId, String numRegistration, String studyProgramName, String universityName) {
-        super(id, firstName, lastName, dateOfBirth, address, createdAt, active, studyProgramId, universityId, numRegistration);
+    public StudentStudyProgram(Integer id, String firstName, String lastName, Date dateOfBirth, String address, Date createdAt, Byte active, Integer studyProgramId, Integer universityId, String numRegistration, String studyProgramName, String universityName) {
+        super(id, firstName, lastName, dateOfBirth, address, createdAt != null ? new Timestamp(createdAt.getTime()) : null, active, studyProgramId, universityId, numRegistration);
         this.studyProgramName = studyProgramName;
         this.universityName = universityName;
     }

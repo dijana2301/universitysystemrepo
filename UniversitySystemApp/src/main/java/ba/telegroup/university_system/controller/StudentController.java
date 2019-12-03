@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("hub/student")
+@RequestMapping("/hub/student")
 @Scope("request")
 public class StudentController {
 
@@ -53,19 +53,20 @@ public class StudentController {
     @Transactional
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Student insert(@RequestBody Student student) {
+    public StudentStudyProgram insert(@RequestBody Student student) {
         Student insertedStudent = studentRepository.saveAndFlush(student);
         entityManager.refresh(insertedStudent);
         System.out.println(insertedStudent.getId());
-        return insertedStudent;
+        return getByIdCustom(insertedStudent.getId());
     }
 
     @PutMapping(value = "/")
-    public Student update(@RequestBody Student student) {
+    public StudentStudyProgram update(@RequestBody Student student) {
         if (studentRepository.getById(student.getId()) != null) {
+            student.setActive((byte) 1);
             Student updatedStudent = studentRepository.saveAndFlush(student);
-            entityManager.refresh(updatedStudent);
-            return updatedStudent;
+//            entityManager.refresh(updatedStudent);
+            return studentRepository.getByIdCustom(updatedStudent.getId());
         } else
             return null;
     }
@@ -84,7 +85,6 @@ public class StudentController {
 
 
     @GetMapping(value = "/values")
-
     public List<Value> getAllValues() {
         List<Student> studentList = studentRepository.findAll();
         List<Value> result = new ArrayList<>();

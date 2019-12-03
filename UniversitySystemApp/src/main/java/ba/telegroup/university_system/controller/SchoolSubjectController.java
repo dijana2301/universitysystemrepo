@@ -52,21 +52,21 @@ public class SchoolSubjectController {
     @Transactional
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public SchoolSubject insert(@RequestBody SchoolSubject schoolSubject) {
+    public SchoolSubjectStudyProgram insert(@RequestBody SchoolSubject schoolSubject) {
         SchoolSubject insertedSchoolSubject = schoolSubjectRepository.saveAndFlush(schoolSubject);
         entityManager.refresh(insertedSchoolSubject);
         System.out.println(insertedSchoolSubject.getId());
-        return insertedSchoolSubject;
+        return getByIdCustom(insertedSchoolSubject.getId());
     }
 
     @Transactional
     @PutMapping(value = "/")
-    public SchoolSubject update(@RequestBody SchoolSubject schoolSubject) {
+    public SchoolSubjectStudyProgram update(@RequestBody SchoolSubject schoolSubject) {
         if (schoolSubjectRepository.getById(schoolSubject.getId()) != null) {
             schoolSubject.setActive((byte) 1);
             SchoolSubject updatedSchoolSubject = schoolSubjectRepository.saveAndFlush(schoolSubject);
             entityManager.refresh(updatedSchoolSubject);
-            return updatedSchoolSubject;
+            return getByIdCustom(updatedSchoolSubject.getId());
         }
         return null;
     }

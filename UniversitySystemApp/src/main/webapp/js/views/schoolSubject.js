@@ -67,7 +67,7 @@ schoolSubjectView = {
                         editable: false,
                         sort: "string",
                         header: [
-                            "Naziv studijskog programa", {
+                            "Studijski program", {
                                 content: "textFilter"
                             }
                         ]
@@ -86,7 +86,7 @@ schoolSubjectView = {
                 ],
                 select: "row",
                 navigation: true,
-                url: "schoolSubject/custom/",
+                url: "hub/schoolSubject/custom/",
                 on:
                     {
                         onAfterContextMenu: function (item) {
@@ -101,7 +101,7 @@ schoolSubjectView = {
         var that = this;
         util.preloader.inc();
 
-        var studyProgramAllPromise = connection.sendAjax("GET", "/studyProgram/values/",
+        var studyProgramAllPromise = connection.sendAjax("GET", "hub/studyProgram/values/",
             function (text, data, xhr) {
                 var jsonData = data.json();
                 that.dependencies.studyProgramAll = jsonData;
@@ -158,7 +158,7 @@ schoolSubjectView = {
                             var delBox = (webix.copy(commonViews.brisanjePotvrda("školskih predmeta", "školskog predmeta")));
                             delBox.callback = function (result) {
                                 if (result == 1) {
-                                    connection.sendAjax("DELETE", "schoolSubject/" + context.id.row,
+                                    connection.sendAjax("DELETE", "hub/schoolSubject/" + context.id.row,
                                         function (text, data, xhr) {
                                             if ("Success" === text) {
                                                 $$("schoolSubjectTable").remove(context.id.row);
@@ -232,7 +232,7 @@ schoolSubjectView = {
                             view: "richselect",
                             id: "studyProgramId",
                             name: "studyProgramId",
-                            label: "Naziv studijskog programa:",
+                            label: "Studijski program:",
                             invalidMessage: "Molimo Vas da odaberete naziv studijskog programa kojem pripada.",
                             required: true
                         },
@@ -240,7 +240,7 @@ schoolSubjectView = {
                             view: "text",
                             id: "ects",
                             name: "ects",
-                            label: "Broj ECTS bodova:",
+                            label: "ECTS:",
                             invalidMessage: "Molimo Vas da unesete broj ECTS bodova.",
                             required: true
                         },
@@ -264,7 +264,7 @@ schoolSubjectView = {
                         "name": function (value) {
                             if (!value)
                                 return false;
-                            if (value.length > 100) {
+                            if (value.length > 45) {
                                 $$('addSchoolSubjectForm').elements.name.config.invalidMessage = 'Maksimalan broj karaktera je 45!';
                                 return false;
                             }
@@ -295,7 +295,7 @@ schoolSubjectView = {
                 studyProgramId: form.getValues().studyProgramId,
                 ects: form.getValues().ects
             };
-            connection.sendAjax("POST", "schoolSubject/",
+            connection.sendAjax("POST", "/hub/schoolSubject/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('schoolSubjectTable').add(jsonData);
@@ -362,15 +362,15 @@ schoolSubjectView = {
                             view: "richselect",
                             id: "studyProgramId",
                             name: "studyProgramId",
-                            label: "Naziv studijskog programa:",
-                            invalidMessage: "Molimo Vas da odaberete naziv univerziteta.",
+                            label: "Studijski program:",
+                            invalidMessage: "Molimo Vas da odaberete studijski program.",
                             required: true
                         },
                         {
                             view: "text",
                             id: "ects",
                             name: "ects",
-                            label: "ECTS bodovi:",
+                            label: "ECTS:",
                             invalidMessage: "Molimo Vas da unesete ECTS bodove.",
                             required: true
                         },
@@ -434,7 +434,7 @@ schoolSubjectView = {
                 ects: form.getValues().ects
             };
 
-            connection.sendAjax("PUT", "schoolSubject/",
+            connection.sendAjax("PUT", "/hub/schoolSubject/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('schoolSubjectTable').updateItem(newSchoolSubject.id, jsonData);

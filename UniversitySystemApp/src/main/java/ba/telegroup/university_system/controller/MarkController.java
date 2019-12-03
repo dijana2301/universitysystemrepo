@@ -15,7 +15,7 @@ import javax.persistence.PersistenceContext;
 import java.util.List;
 
 @RestController
-@RequestMapping("hub/mark")
+@RequestMapping("/hub/mark")
 @Scope("request")
 public class MarkController {
 
@@ -34,6 +34,11 @@ public class MarkController {
         return markRepository.findAll();
     }
 
+    @GetMapping(value = "/{id}")
+    public Mark getById(@PathVariable Integer id) {
+        return markRepository.getById(id);
+    }
+
     @GetMapping(value = "/custom/")
     public List<MarkStudentSchoolSubjectTeacher> getAllCustom() {
         return markRepository.getAllCustom();
@@ -44,14 +49,43 @@ public class MarkController {
         return markRepository.getByIdCustom(id);
     }
 
+    @GetMapping(value = "/custom/byStudentId/{studentId}")
+    public List<MarkStudentSchoolSubjectTeacher> getByStudentIdCustom(@PathVariable Integer studentId) {
+        return markRepository.getByStudentIdCustom(studentId);
+    }
+
     @Transactional
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Mark insert(@RequestBody Mark mark) {
+    public MarkStudentSchoolSubjectTeacher insert(@RequestBody Mark mark) {
         Mark insertedMark = markRepository.saveAndFlush(mark);
         entityManager.refresh(insertedMark);
         System.out.println(insertedMark.getId());
-        return insertedMark;
+        return getByIdCustom(insertedMark.getId());
     }
+
+    @Transactional
+    @PutMapping(value = "/")
+    public MarkStudentSchoolSubjectTeacher update(@RequestBody Mark mark) {
+        if (markRepository.getById(mark.getId()) != null) {
+            Mark updatedMark = markRepository.saveAndFlush(mark);
+            entityManager.refresh(updatedMark);
+            System.out.println(updatedMark.getId());
+            return getByIdCustom(updatedMark.getId());
+        }
+        return null;
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public String delete(@PathVariable Integer id) {
+        try {
+            markRepository.deleteById(id);
+            return "Success";
+        } catch (Exception ex) {
+            return "Fail";
+        }
+
+    }
+
 
 }

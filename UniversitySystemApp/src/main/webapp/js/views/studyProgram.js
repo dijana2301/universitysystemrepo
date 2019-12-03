@@ -62,7 +62,7 @@ var studyProgramView = {
                         editable: false,
                         sort: "string",
                         header: [
-                            "Broj godine", {
+                            "Godine", {
                                 content: "textFilter"
                             }
                         ]
@@ -89,7 +89,7 @@ var studyProgramView = {
                         editable: false,
                         sort: "string",
                         header: [
-                            "Naziv fakulteta", {
+                            "Fakultet", {
                                 content: "textFilter"
                             }
                         ]
@@ -97,7 +97,7 @@ var studyProgramView = {
                 ],
                 select: "row",
                 navigation: true,
-                url: "studyProgram/custom/",
+                url: "hub/studyProgram/custom/",
                 on:
                     {
                         onAfterContextMenu: function (item) {
@@ -112,7 +112,7 @@ var studyProgramView = {
         var that = this;
         util.preloader.inc();
 
-        var collegeAllPromise = connection.sendAjax("GET", "/college/values/",
+        var collegeAllPromise = connection.sendAjax("GET", "hub/college/values/",
             function (text, data, xhr) {
                 var jsonData = data.json();
                 that.dependencies.collegeAll = jsonData;
@@ -169,7 +169,7 @@ var studyProgramView = {
                             var delBox = (webix.copy(commonViews.brisanjePotvrda("studijskog programa", "studijskih programa")));
                             delBox.callback = function (result) {
                                 if (result == 1) {
-                                    connection.sendAjax("DELETE", "studyProgram/" + context.id.row,
+                                    connection.sendAjax("DELETE", "hub/studyProgram/" + context.id.row,
                                         function (text, data, xhr) {
                                             if ("Success" === text) {
                                                 $$("studyProgramTable").remove(context.id.row);
@@ -243,7 +243,7 @@ var studyProgramView = {
                             view: "text",
                             id: "numOfYears",
                             name: "numOfYears",
-                            label: "Broj godina:",
+                            label: "Godine:",
                             invalidMessage: "Molimo Vas da unesete broj godina studija.",
                             required: true
                         },
@@ -251,7 +251,7 @@ var studyProgramView = {
                             view: "text",
                             id: "ects",
                             name: "ects",
-                            label: "Broj ECTS bodova:",
+                            label: "ECTS:",
                             invalidMessage: "Molimo Vas da unesete broj ECTS bodova.",
                             required: true
                         },
@@ -259,7 +259,7 @@ var studyProgramView = {
                             view: "richselect",
                             id: "collegeId",
                             name: "collegeId",
-                            label: "Naziv fakulteta:",
+                            label: "Fakultet:",
                             invalidMessage: "Molimo Vas da odaberete naziv fakulteta.",
                             required: true
                         },
@@ -315,7 +315,7 @@ var studyProgramView = {
                 ects: form.getValues().ects,
                 collegeId: form.getValues().collegeId
             };
-            connection.sendAjax("POST", "studyProgram/",
+            connection.sendAjax("POST", "hub/studyProgram/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('studyProgramTable').add(jsonData);
@@ -381,7 +381,7 @@ var studyProgramView = {
                             view: "text",
                             id: "numOfYears",
                             name: "numOfYears",
-                            label: "Broj godina:",
+                            label: "Godine:",
                             invalidMessage: "Molimo Vas da unesete broj godina studijskog programa.",
                             required: true
                         },
@@ -397,7 +397,7 @@ var studyProgramView = {
                             view: "richselect",
                             id: "collegeId",
                             name: "collegeId",
-                            label: "Naziv fakulteta:",
+                            label: "Fakultet:",
                             invalidMessage: "Molimo Vas da odaberete naziv fakulteta.",
                             required: true
                         },
@@ -462,7 +462,7 @@ var studyProgramView = {
                 collegeId: form.getValues().collegeId
             };
 
-            connection.sendAjax("PUT", "/studyProgram/",
+            connection.sendAjax("PUT", "hub//studyProgram/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('studyProgramTable').updateItem(newStudyProgram.id, jsonData);

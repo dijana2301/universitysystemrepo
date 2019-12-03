@@ -57,17 +57,17 @@ public class StudyProgramController {
         StudyProgram insertedStudyProgram = studyProgramRepository.saveAndFlush(studyProgram);
         entityManager.refresh(insertedStudyProgram);
         System.out.println(insertedStudyProgram.getId());
-        return insertedStudyProgram;
+        return getByIdCustom(insertedStudyProgram.getId());
     }
 
     @Transactional
     @PutMapping(value = "/")
-    public StudyProgram update(@RequestBody StudyProgram studyProgram) {
+    public StudyProgramCollege update(@RequestBody StudyProgram studyProgram) {
         if (studyProgramRepository.getById(studyProgram.getId()) != null) {
             studyProgram.setActive((byte) 1);
             StudyProgram updatedStudyProgram = studyProgramRepository.saveAndFlush(studyProgram);
             entityManager.refresh(updatedStudyProgram);
-            return updatedStudyProgram;
+            return getByIdCustom(updatedStudyProgram.getId());
         } else
             return null;
     }
@@ -86,12 +86,11 @@ public class StudyProgramController {
 
     @GetMapping(value = "/values")
     public List<Value> getAllValues() {
-        List<StudyProgram> collegeList = studyProgramRepository.findAll();
+        List<StudyProgram> studyProgramList = studyProgramRepository.findAll();
         List<Value> result = new ArrayList<>();
-        for (StudyProgram college : collegeList) {
-            result.add(new Value(college.getId(), college.getName()));
+        for (StudyProgram studyProgram : studyProgramList) {
+            result.add(new Value(studyProgram.getId(), studyProgram.getName()));
         }
-
         return result;
     }
 

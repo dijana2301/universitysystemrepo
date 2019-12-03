@@ -4,6 +4,7 @@ package ba.telegroup.university_system.controller;
 import ba.telegroup.university_system.model.Teacher;
 import ba.telegroup.university_system.model.modelCustom.TeacherTitle;
 import ba.telegroup.university_system.repository.TeacherRepository;
+import ba.telegroup.university_system.util.Value;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpStatus;
@@ -12,10 +13,11 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("hub/teacher")
+@RequestMapping("/hub/teacher")
 @Scope("request")
 public class TeacherController {
 
@@ -53,20 +55,21 @@ public class TeacherController {
     @Transactional
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public Teacher insert(@RequestBody Teacher teacher) {
+    public TeacherTitle insert(@RequestBody Teacher teacher) {
         Teacher insertedTeacher = teacherRepository.saveAndFlush(teacher);
         entityManager.refresh(insertedTeacher);
         System.out.println(insertedTeacher.getId());
-        return insertedTeacher;
+        return getByIdCustom(insertedTeacher.getId());
     }
 
     @Transactional
     @PutMapping(value = "/")
-    public Teacher update(@RequestBody Teacher teacher) {
+    public TeacherTitle update(@RequestBody Teacher teacher) {
         if (teacherRepository.getById(teacher.getId()) != null) {
+            teacher.setActive((byte) 1);
             Teacher updatedTeacher = teacherRepository.saveAndFlush(teacher);
             entityManager.refresh(updatedTeacher);
-            return updatedTeacher;
+            return getByIdCustom(updatedTeacher.getId());
         } else
             return null;
     }
@@ -81,6 +84,16 @@ public class TeacherController {
         } else {
             return "Fail";
         }
+    }
 
+    @GetMapping(value = "/values")
+    public List<Value> getAllValues() {
+        List<Teacher> teacherList = teacherRepository.findAll();
+        List<Value> result = new ArrayList<>();
+        for (Teacher teacher : teacherList) {
+            result.add(new Value(teacher.getId(), teacher.getFirstName() + " " + teacher.getLastName()));
+        }
+
+        return result;
     }
 }

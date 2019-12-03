@@ -12,7 +12,7 @@ public class TeacherRepositoryImpl implements TeacherRepositoryCustom {
 
     private static final String SQL_GET_ALL_CUSTOM = "select t.*,ti.name as title_name,u.`name` as university_name from teacher t inner join title ti on t.title_id=ti.id inner join university u on t.university_id=u.id where t.active=1";
 
-    private static final String SQL_GET_BY_ID_CUSTOM = "select t.*,ti.name as title_name,u.`name` as university_name from teacher t inner join title ti on t.title_id=ti.id inner join university u on t.university_id=u.id where t.active=1 and t.id=2";
+    private static final String SQL_GET_BY_ID_CUSTOM = "select t.*,ti.name as title_name,u.`name` as university_name from teacher t inner join title ti on t.title_id=ti.id inner join university u on t.university_id=u.id where t.active=1 and t.id=?";
 
     @PersistenceContext
     EntityManager entityManager;

@@ -1,9 +1,7 @@
-var universityView = {
-    /*  dependencies:{
-         universityAll: []
-       }, */
+var userView = {
+
     panel: {
-        id: "universityPanel",
+        id: "userPanel",
         adjust: true,
         rows: [
             {
@@ -14,22 +12,22 @@ var universityView = {
                     {
                         view: "label",
                         width: 400,
-                        template: "<span class='fa fa-university'></span> Univerziteti"
+                        template: "<span class='webix_icon far fa-user'></span> Korisnici"
                     },
                     {},
                     {
-                        id: "addUniversityBtn",
+                        id: "addUserBtn",
                         view: "button",
                         type: "iconButton",
-                        label: "Dodajte novi Univerzitet",
+                        label: "Dodajte novog korisnika",
                         icon: "plus-circle",
-                        click: 'universityView.showAddDialog',
+                        click: 'userView.showAddDialog',
                         autowidth: true
                     }
                 ]
             },
             {
-                id: "universityTable",
+                id: "userTable",
                 view: "datatable",
                 css: "webixDatatable",
                 editable: true,
@@ -46,36 +44,35 @@ var universityView = {
                         fillspace: true,
                     },
                     {
-                        id: "name",
+                        id: "username",
                         fillspace: true,
                         editable: false,
                         sort: "string",
                         header: [
-                            "Naziv", {
+                            "Username", {
                                 content: "textFilter"
                             }
                         ]
                     },
                     {
-                        id: "address",
+                        id: "firstName",
                         fillspace: true,
                         editable: false,
                         sort: "string",
                         header: [
-                            "Adresa", {
+                            "Ime", {
                                 content: "textFilter"
                             }
                         ]
                     },
                     {
-                        id: "dateOfFoundation",
+                        id: "lastName",
                         fillspace: true,
                         editable: false,
-                        sort: "date",
-                        format: webix.Date.dateToStr("%d.%m.%Y"),
+                        sort: "string",
                         header: [
-                            "Datum osnivanja", {
-                                content: "dateFilter"
+                            "Prezime", {
+                                content: "textFilter"
                             }
                         ]
                     },
@@ -83,7 +80,7 @@ var universityView = {
                 ],
                 select: "row",
                 navigation: true,
-                url: "hub/university/",
+                url: "hub/user/",
                 on:
                     {
                         onAfterContextMenu: function (item) {
@@ -93,35 +90,10 @@ var universityView = {
             }
         ]
     },
-    /*
-        preloadDependencies: function () {
-            var that = this;
-            util.preloader.inc();
-
-            var universityAllPromise = connection.sendAjax("GET", "/university/",
-                function (text, data, xhr) {
-                    var jsonData = data.json();
-                    that.dependencies.universityAll = jsonData;
-                },
-                function () {
-                    util.messages.showErrorMessage("Greška prilikom prikupljanja podataka o univerzitetima.");
-                });
-
-            webix.promise.all([universityAllPromise]).then(function (results) {
-                for (var i = 0; i < results.length; i++) {
-                    if (results[i] == false) {
-                        util.preloader.reset();
-                        return;
-                    }
-                }
-                that.postInit();
-            });
-
-        }, */
 
     postInit: function () {
         $$("main").removeView(rightPanel);
-        rightPanel = "universityPanel";
+        rightPanel = "userPanel";
 
         var panelCopy = webix.copy(this.panel);
 
@@ -129,21 +101,49 @@ var universityView = {
 
         webix.ui({
             view: "contextmenu",
-            id: "universityContextMenu",
+            id: "userContextMenu",
             width: 235,
             data: [
                 {
                     id: "1",
                     value: "Izmijenite",
                     icon: "pencil-square-o"
+                },
+                {
+                    id: "2",
+                    value: "Obrišite",
+                    icon: "trash"
                 }
             ],
-            master: $$("universityTable"),
+            master: $$("userTable"),
             on: {
                 onItemClick: function (id) {
                     var context = this.getContext();
-                    universityView.showChangeUniversityDialog($$("universityTable").getItem(context.id.row));
-
+                    switch (id) {
+                        case "1":
+                            userView.showChangeUserDialog($$("userTable").getItem(context.id.row));
+                            break;
+                        case "2":
+                            var delBox = (webix.copy(commonViews.brisanjePotvrda("korisnika", "korisnik")));
+                            delBox.callback = function (result) {
+                                if (result == 1) {
+                                    connection.sendAjax("DELETE", "hub/user/" + context.id.row,
+                                        function (text, data, xhr) {
+                                            if ("Success" === text) {
+                                                $$("userTable").remove(context.id.row);
+                                                util.messages.showMessage("Korisnik je uspješno obrisan.");
+                                            } else {
+                                                util.messages.showErrorMessage("Korisnik nije uspješno obrisan.");
+                                            }
+                                        },
+                                        function () {
+                                            util.messages.showErrorMessage("Korisnik nije uspješno obrisan.");
+                                        });
+                                }
+                            };
+                            webix.confirm(delBox);
+                            break;
+                    }
                 }
             }
         });
@@ -156,18 +156,18 @@ var universityView = {
 
     addDialog: {
         view: "popup",
-        id: "addUniversityDialog",
+        id: "addUserDialog",
         modal: true,
         position: "center",
         body: {
-            id: "addUniversityInside",
+            id: "addUserInside",
             rows: [
                 {
                     view: "toolbar",
                     cols: [
                         {
                             view: "label",
-                            label: "<span class='webix_icon fa-university'></span> Dodavanje Univerziteta",
+                            label: "<span class='webix_icon far fa-user'></span> Dodavanje korisnika",
                             width: 400
                         },
                         {},
@@ -176,13 +176,13 @@ var universityView = {
                             view: "icon",
                             icon: "close",
                             align: "right",
-                            click: "util.dismissDialog('addUniversityDialog');"
+                            click: "util.dismissDialog('addUserDialog');"
                         }
                     ]
                 },
                 {
                     view: "form",
-                    id: "addUniversityForm",
+                    id: "addUserForm",
                     width: 600,
                     elementsConfig: {
                         labelWidth: 200,
@@ -191,28 +191,26 @@ var universityView = {
                     elements: [
                         {
                             view: "text",
-                            id: "name",
-                            name: "name",
-                            label: "Naziv:",
-                            invalidMessage: "Molimo Vas da unesete naziv Univerziteta.",
+                            id: "username",
+                            name: "username",
+                            label: "Username:",
+                            invalidMessage: "Molimo Vas da unesete Vaš username.",
                             required: true
                         },
                         {
                             view: "text",
-                            id: "address",
-                            name: "address",
-                            label: "Adresa:",
-                            invalidMessage: "Molimo Vas da unesete adresu Univerziteta.",
+                            id: "firstName",
+                            name: "firstName",
+                            label: "Ime:",
+                            invalidMessage: "Molimo Vas da unesete Vaše ime.",
                             required: true
                         },
                         {
-                            view: "datepicker",
-                            id: "dateOfFoundation",
-                            name: "dateOfFoundation",
-                            label: "Datum osnivanja:",
-                            format: webix.Date.dateToStr("%d.%m.%Y"),
-                            stringResult: true,
-                            invalidMessage: "Molimo Vas da unesete datum osnivanja Univerziteta.",
+                            view: "text",
+                            id: "lastName",
+                            name: "lastName",
+                            label: "Prezime:",
+                            invalidMessage: "Molimo Vas da unesete Vaše prezime.",
                             required: true
                         },
                         {
@@ -220,11 +218,11 @@ var universityView = {
                             cols: [
                                 {},
                                 {
-                                    id: "saveUniversity",
+                                    id: "saveUser",
                                     view: "button",
                                     value: "Sačuvajte novi unos",
                                     type: "form",
-                                    click: "universityView.save",
+                                    click: "userView.save",
                                     hotkey: "enter",
                                     width: 375
                                 }
@@ -233,20 +231,29 @@ var universityView = {
 
                     ],
                     rules: {
-                        "name": function (value) {
+                        "username": function (value) {
                             if (!value)
                                 return false;
-                            if (value.length > 100) {
-                                $$('addUniversityForm').elements.name.config.invalidMessage = 'Maksimalan broj karaktera je 100!';
+                            if (value.length > 45) {
+                                $$('addUserForm').elements.name.config.invalidMessage = 'Maksimalan broj karaktera je 45!';
                                 return false;
                             }
                             return true;
                         },
-                        "address": function (value) {
+                        "firstName": function (value) {
                             if (!value)
                                 return false;
-                            if (value.length > 100) {
-                                $$('addUniversityForm').elements.address.config.invalidMessage = 'Maksimalan broj karaktera je 100!';
+                            if (value.length > 50) {
+                                $$('addUserForm').elements.name.config.invalidMessage = 'Maksimalan broj karaktera je 50!';
+                                return false;
+                            }
+                            return true;
+                        },
+                        "lastName": function (value) {
+                            if (!value)
+                                return false;
+                            if (value.length > 50) {
+                                $$('addUserForm').elements.address.config.invalidMessage = 'Maksimalan broj karaktera je 50!';
                                 return false;
                             }
                             return true;
@@ -258,51 +265,51 @@ var universityView = {
     },
 
     showAddDialog: function () {
-        if (util.popupIsntAlreadyOpened("addUniversityDialog")) {
-            webix.ui(webix.copy(universityView.addDialog)).show();
+        if (util.popupIsntAlreadyOpened("addUserDialog")) {
+            webix.ui(webix.copy(userView.addDialog)).show();
 
 
-            webix.UIManager.setFocus("name");
+            webix.UIManager.setFocus("username");
         }
     },
 
     save: function () {
-        var form = $$("addUniversityForm");
+        var form = $$("addUserForm");
 
         if (form.validate()) {
-            var newUniversity = {
-                name: form.getValues().name,
-                address: form.getValues().address,
-                dateOfFoundation: new Date(form.getValues().dateOfFoundation)
+            var newUser = {
+                username: form.getValues().username,
+                firstName: form.getValues().firstName,
+                lastName: form.getValues().lastName
             };
-            connection.sendAjax("POST", "hub/university/",
+            connection.sendAjax("POST", "/hub/user/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
-                    $$('universityTable').add(jsonData);
-                    util.messages.showMessage("Novi Univerzitet je uspješno dodat.");
+                    $$('userTable').add(jsonData);
+                    util.messages.showMessage("Novi korisnik je uspješno dodat.");
                 },
                 function () {
-                    util.messages.showErrorMessage("Novi Univerzitet nije uspješno dodat.");
-                }, newUniversity);
+                    util.messages.showErrorMessage("Novi korisnik nije uspješno dodat.");
+                }, newUser);
 
-            util.dismissDialog('addUniversityDialog');
+            util.dismissDialog('addUserDialog');
         }
     },
 
-    changeUniversityDialog: {
+    changeUserDialog: {
         view: "popup",
-        id: "changeUniversityDialog",
+        id: "changeUserDialog",
         modal: true,
         position: "center",
         body: {
-            id: "changeUniversityInside",
+            id: "changeUserInside",
             rows: [
                 {
                     view: "toolbar",
                     cols: [
                         {
                             view: "label",
-                            label: "<span class='webix_icon fa-university'></span> Izmjena Univerziteta",
+                            label: "<span class='webix_icon far fa-user'></span> Izmjena korisnika",
                             width: 400
                         },
                         {},
@@ -311,13 +318,13 @@ var universityView = {
                             view: "icon",
                             icon: "close",
                             align: "right",
-                            click: "util.dismissDialog('changeUniversityDialog');"
+                            click: "util.dismissDialog('changeUserDialog');"
                         }
                     ]
                 },
                 {
                     view: "form",
-                    id: "changeUniversityForm",
+                    id: "changeUserForm",
                     width: 600,
                     elementsConfig: {
                         labelWidth: 200,
@@ -332,28 +339,26 @@ var universityView = {
                         },
                         {
                             view: "text",
-                            id: "name",
-                            name: "name",
-                            label: "Naziv:",
-                            invalidMessage: "Molimo Vas da unesete naziv Univerziteta.",
+                            id: "username",
+                            name: "username",
+                            label: "Username:",
+                            invalidMessage: "Molimo Vas da unesete username.",
                             required: true
                         },
                         {
                             view: "text",
-                            id: "address",
-                            name: "address",
-                            label: "Adresa:",
-                            invalidMessage: "Molimo Vas da unesete adresu Univerziteta.",
+                            id: "firstName",
+                            name: "firstName",
+                            label: "Ime:",
+                            invalidMessage: "Molimo Vas da unesete ime korisnika.",
                             required: true
                         },
                         {
-                            view: "datepicker",
-                            id: "dateOfFoundation",
-                            name: "dateOfFoundation",
-                            label: "Datum osnivanja:",
-                            format: webix.Date.dateToStr("%d.%m.%Y"),
-                            stringResult: true,
-                            invalidMessage: "Molimo Vas da unesete datum osnivanja fakulteta.",
+                            view: "text",
+                            id: "lastName",
+                            name: "lastName",
+                            label: "Prezime:",
+                            invalidMessage: "Molimo Vas da unesete prezime korisnika.",
                             required: true
                         },
 
@@ -363,11 +368,11 @@ var universityView = {
                                 {},
                                 {},
                                 {
-                                    id: "saveUniversity",
+                                    id: "saveUser",
                                     view: "button",
                                     value: "Sačuvajte izmjene",
                                     type: "form",
-                                    click: "universityView.saveChangedUniversity",
+                                    click: "userView.saveChangedUser",
                                     hotkey: "enter",
                                     width: 370
                                 }
@@ -375,20 +380,29 @@ var universityView = {
                         }
                     ],
                     rules: {
-                        "name": function (value) {
+                        "username": function (value) {
                             if (!value)
                                 return false;
-                            if (value.length > 100) {
-                                $$('addUniversityForm').elements.name.config.invalidMessage = 'Maksimalan broj karaktera je 100!';
+                            if (value.length > 45) {
+                                $$('addUserForm').elements.name.config.invalidMessage = 'Maksimalan broj karaktera je 45!';
                                 return false;
                             }
                             return true;
                         },
-                        "address": function (value) {
+                        "firstName": function (value) {
                             if (!value)
                                 return false;
-                            if (value.length > 100) {
-                                $$('addUniversityForm').elements.address.config.invalidMessage = 'Maksimalan broj karaktera je 100!';
+                            if (value.length > 50) {
+                                $$('addUserForm').elements.address.config.invalidMessage = 'Maksimalan broj karaktera je 50!';
+                                return false;
+                            }
+                            return true;
+                        },
+                        "lasttName": function (value) {
+                            if (!value)
+                                return false;
+                            if (value.length > 50) {
+                                $$('addUserForm').elements.address.config.invalidMessage = 'Maksimalan broj karaktera je 50!';
                                 return false;
                             }
                             return true;
@@ -399,44 +413,44 @@ var universityView = {
         }
     },
 
-    showChangeUniversityDialog: function (university) {
-        if (util.popupIsntAlreadyOpened("changeUniversityDialog")) {
-            webix.ui(webix.copy(universityView.changeUniversityDialog)).show();
-            var form = $$("changeUniversityForm");
+    showChangeUserDialog: function (user) {
+        if (util.popupIsntAlreadyOpened("changeUserDialog")) {
+            webix.ui(webix.copy(userView.changeUserDialog)).show();
+            var form = $$("changeUserForm");
 
 
-            form.elements.id.setValue(university.id);
-            form.elements.name.setValue(university.name);
-            form.elements.address.setValue(university.address);
-            form.elements.dateOfFoundation.setValue(university.dateOfFoundation);
+            form.elements.id.setValue(user.id);
+            form.elements.username.setValue(user.username);
+            form.elements.firstName.setValue(user.firstName);
+            form.elements.lastName.setValue(user.lastName);
 
-            webix.UIManager.setFocus("name");
+            webix.UIManager.setFocus("username");
         }
     },
 
-    saveChangedUniversity: function () {
-        var form = $$("changeUniversityForm");
+    saveChangedUser: function () {
+        var form = $$("changeUserForm");
 
         if (form.validate()) {
-            var newUniversity = {
+            var newUser = {
                 id: form.getValues().id,
-                name: form.getValues().name,
-                address: form.getValues().address,
-                dateOfFoundation: new Date(form.getValues().dateOfFoundation),
+                username: form.getValues().username,
+                firstName: form.getValues().firstName,
+                lastName: form.getValues().lastName
 
             };
 
-            connection.sendAjax("PUT", "hub/university/",
+            connection.sendAjax("PUT", "/hub/user/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
-                    $$('universityTable').updateItem(newUniversity.id, jsonData);
-                    util.messages.showMessage("Univerzitet je uspješno promijenjen.");
+                    $$('userTable').updateItem(newUser.id, jsonData);
+                    util.messages.showMessage("Korisnik je uspješno promijenjen.");
                 },
                 function () {
-                    util.messages.showErrorMessage("Univerzitet nije uspješno promijenjen.");
-                }, newUniversity);
+                    util.messages.showErrorMessage("Korisnik nije uspješno promijenjen.");
+                }, newUser);
 
-            util.dismissDialog('changeUniversityDialog');
+            util.dismissDialog('changeUserDialog');
         }
     }
 

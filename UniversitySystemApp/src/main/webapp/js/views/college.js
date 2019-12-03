@@ -90,7 +90,7 @@ var collegeView = {
                         editable: false,
                         sort: "string",
                         header: [
-                            "Naziv univerziteta", {
+                            "Univerzitet", {
                                 content: "textFilter"
                             }
                         ]
@@ -98,7 +98,7 @@ var collegeView = {
                 ],
                 select: "row",
                 navigation: true,
-                url: "college/custom/",
+                url: "hub/college/custom/",
                 on:
                     {
                         onAfterContextMenu: function (item) {
@@ -113,7 +113,7 @@ var collegeView = {
         var that = this;
         util.preloader.inc();
 
-        var universityAllPromise = connection.sendAjax("GET", "/university/values/",
+        var universityAllPromise = connection.sendAjax("GET", "/hub/university/values/",
             function (text, data, xhr) {
                 var jsonData = data.json();
                 that.dependencies.universityAll = jsonData;
@@ -170,7 +170,7 @@ var collegeView = {
                             var delBox = (webix.copy(commonViews.brisanjePotvrda("fakulteta", "fakultet")));
                             delBox.callback = function (result) {
                                 if (result == 1) {
-                                    connection.sendAjax("DELETE", "college/" + context.id.row,
+                                    connection.sendAjax("DELETE", "hub/college/" + context.id.row,
                                         function (text, data, xhr) {
                                             if ("Success" === text) {
                                                 $$("collegeTable").remove(context.id.row);
@@ -262,7 +262,7 @@ var collegeView = {
                             view: "richselect",
                             id: "universityId",
                             name: "universityId",
-                            label: "Naziv univerziteta:",
+                            label: "Univerzitet:",
                             invalidMessage: "Molimo Vas da odaberete naziv univerziteta.",
                             required: true
                         },
@@ -327,7 +327,7 @@ var collegeView = {
                 dateOfFoundation: new Date(form.getValues().dateOfFoundation),
                 universityId: form.getValues().universityId
             };
-            connection.sendAjax("POST", "college/",
+            connection.sendAjax("POST", "hub/college/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('collegeTable').add(jsonData);
@@ -412,7 +412,7 @@ var collegeView = {
                             view: "richselect",
                             id: "universityId",
                             name: "universityId",
-                            label: "Naziv univerziteta:",
+                            label: "Univerzitet:",
                             invalidMessage: "Molimo Vas da odaberete naziv univerziteta.",
                             required: true
                         },
@@ -486,7 +486,7 @@ var collegeView = {
                 universityId: form.getValues().universityId
             };
 
-            connection.sendAjax("PUT", "college/",
+            connection.sendAjax("PUT", "hub/college/",
                 function (text, data, xhr) {
                     var jsonData = data.json();
                     $$('collegeTable').updateItem(newCollege.id, jsonData);

@@ -27,11 +27,14 @@ var menuActions = function (id) {
         case "student":
             studentView.selectPanel();
             break;
-        case "teacher_school_subject":
-            teacherSchoolSubjectView.selectPanel();
-            break;
         case "mark":
             markView.selectPanel();
+            break;
+        case "title":
+            titleView.selectPanel();
+            break;
+        case "user":
+            userView.selectPanel();
             break;
     }
 };
@@ -50,32 +53,37 @@ var menuAdmin = [
     {
         id: "studyProgram",
         value: "Studijski programi",
-        icon: "list-alt "
+        icon: "list-alt"
     },
     {
         id: "schoolSubject",
         value: "Školski predmeti",
-        icon: "fa fa-book"
+        icon: "book"
     },
     {
         id: "teacher",
-        value: "Akademsko osoblje",
-        icon: "chalkboard-teacher"
+        value: "Predavač",
+        icon: "fas fa-flag"
     },
     {
         id: "student",
         value: "Studenti",
-        icon: "user-friends"
-    },
-    {
-        id: "teacher_school_subject",
-        value: "Spisak školskih predmeta i njihovih predavača",
-        icon: "book-reader"
+        icon: "users"
     },
     {
         id: "mark",
         value: "Ocjene",
-        icon: "fa-check"
+        icon: "check"
+    },
+    {
+        id: "title",
+        value: "Zvanja",
+        icon: "certificate"
+    },
+    {
+        id: "user",
+        value: "Korisnici",
+        icon: "far fa-user"
     }
 ];
 

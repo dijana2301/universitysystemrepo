@@ -8,4 +8,6 @@ public interface MarkRepositoryCustom {
     List<MarkStudentSchoolSubjectTeacher> getAllCustom();
 
     MarkStudentSchoolSubjectTeacher getByIdCustom(Integer id);
+
+    List<MarkStudentSchoolSubjectTeacher> getByStudentIdCustom(Integer studentId);
 }

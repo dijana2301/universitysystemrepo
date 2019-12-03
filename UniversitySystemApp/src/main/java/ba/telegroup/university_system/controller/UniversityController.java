@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("hub/university")
+@RequestMapping("/hub/university")
 @Scope("request")
 public class UniversityController {
     private final UniversityRepository universityRepository;

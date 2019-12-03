@@ -27,7 +27,6 @@ import java.util.Objects;
 
 @MappedSuperclass
 public class MarkStudentSchoolSubjectTeacher extends Mark {
-
     private String studentName;
     private String schoolSubjectName;
     private String teacherName;

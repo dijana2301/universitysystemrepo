@@ -81,7 +81,7 @@ public class StudyProgram {
     }
 
     @Basic
-    @Column(name = "active", nullable = false, insertable = false, updatable = false)
+    @Column(name = "active", nullable = false, insertable = false)
     public Byte getActive() {
         return active;
     }

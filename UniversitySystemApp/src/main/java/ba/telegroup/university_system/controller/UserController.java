@@ -15,7 +15,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @RestController
-@RequestMapping("hub/user")
+@RequestMapping("/hub/user")
 @Scope("request")
 public class UserController {
     private final UserRepository userRepository;
@@ -41,8 +41,8 @@ public class UserController {
     @Transactional
     @PostMapping(value = "/")
     @ResponseStatus(HttpStatus.CREATED)
-    public User insert(@RequestBody User university) {
-        User insertedUser = userRepository.saveAndFlush(university);
+    public User insert(@RequestBody User user) {
+        User insertedUser = userRepository.saveAndFlush(user);
         entityManager.refresh(insertedUser);
         System.out.println(insertedUser.getId());
         return insertedUser;
@@ -52,6 +52,7 @@ public class UserController {
     @PutMapping(value = "/")
     public User update(@RequestBody User user) {
         if (userRepository.getById(user.getId()) != null) {
+            user.setActive((byte) 1);
             User updatedUser = userRepository.saveAndFlush(user);
             entityManager.refresh(updatedUser);
             return updatedUser;
@@ -61,12 +62,14 @@ public class UserController {
 
     @DeleteMapping(value = "/{id}")
     public String delete(@PathVariable Integer id) {
-        try {
-            userRepository.deleteById(id);
+        User user = userRepository.getById(id);
+        if (user != null) {
+            user.setActive((byte) 0);
+            userRepository.saveAndFlush(user);
             return "Success";
-        } catch (Exception ex) {
+        } else
             return "Fail";
-        }
+
     }
 
 

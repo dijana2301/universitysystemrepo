@@ -41,8 +41,8 @@ public class TeacherTitle extends Teacher {
     public TeacherTitle() {
     }
 
-    public TeacherTitle(Integer id, String firstName, String lastName, Date dateOfBirth, String address, Timestamp createdAt, Byte active, Integer titleId, Integer universityId, String titleName, String universityName) {
-        super(id, firstName, lastName, dateOfBirth, address, createdAt, active, titleId, universityId);
+    public TeacherTitle(Integer id, String firstName, String lastName, Date dateOfBirth, String address, Date createdAt, Byte active, Integer titleId, Integer universityId, String titleName, String universityName) {
+        super(id, firstName, lastName, dateOfBirth, address, createdAt != null ? new Timestamp(createdAt.getTime()) : null, active, titleId, universityId);
         this.titleName = titleName;
         this.universityName = universityName;
 
